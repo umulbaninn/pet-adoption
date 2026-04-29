@@ -1,7 +1,62 @@
-import { Link } from "react-router-dom";
-import { Lock, KeyRound, ChevronLeft } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Lock, KeyRound, ChevronLeft, Hash } from "lucide-react";
+import { useState } from "react";
 
 const ResetPassword = () => {
+  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const email = location.state?.email || ""; // Mengambil email yang dikirim dari ForgotPassword
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+
+    if (password !== passwordConfirmation) {
+      setError("Password dan Konfirmasi Password tidak cocok.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8000/api/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({ 
+          email, 
+          otp, 
+          password, 
+          password_confirmation: passwordConfirmation 
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Gagal reset password.");
+      }
+
+      setMessage("Password berhasil direset! Silakan login.");
+      setTimeout(() => navigate("/login"), 2000);
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-5xl overflow-hidden rounded-[30px] bg-[#FFA552] shadow-2xl">
@@ -15,11 +70,30 @@ const ResetPassword = () => {
                 Reset Password
               </h1>
               <p className="mt-2 text-sm text-[#F9F3EA]/90">
-                Silakan buat password baru untuk akunmu.
+                Silakan masukkan kode OTP yang dikirim ke email {email && <span className="font-bold">{email}</span>} dan buat password baru.
               </p>
             </div>
 
-            <form className="space-y-8">
+            {error && <p className="mb-4 text-sm text-red-500 text-center bg-white/20 p-2 rounded">{error}</p>}
+            {message && <p className="mb-4 text-sm text-green-500 text-center bg-white/20 p-2 rounded">{message}</p>}
+
+            <form onSubmit={handleResetPassword} className="space-y-6">
+              
+              <div className="border-b border-white pb-3">
+                <label className="mb-2 flex items-center gap-3 text-[#F9F3EA]">
+                  <Hash size={18} />
+                  <span>Kode OTP</span>
+                </label>
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  required
+                  placeholder="Masukkan 6 digit OTP"
+                  className="w-full bg-transparent text-[#F9F3EA] outline-none placeholder:text-gray-300"
+                />
+              </div>
+
               <div className="border-b border-white pb-3">
                 <label className="mb-2 flex items-center gap-3 text-[#F9F3EA]">
                   <Lock size={18} />
@@ -27,6 +101,9 @@ const ResetPassword = () => {
                 </label>
                 <input
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                   placeholder="Masukkan password baru"
                   className="w-full bg-transparent text-[#F9F3EA] outline-none placeholder:text-gray-300"
                 />
@@ -39,6 +116,9 @@ const ResetPassword = () => {
                 </label>
                 <input
                   type="password"
+                  value={passwordConfirmation}
+                  onChange={(e) => setPasswordConfirmation(e.target.value)}
+                  required
                   placeholder="Ulangi password baru"
                   className="w-full bg-transparent text-[#F9F3EA] outline-none placeholder:text-gray-300"
                 />
@@ -47,9 +127,10 @@ const ResetPassword = () => {
               <div className="flex justify-end pt-6">
                 <button
                   type="submit"
-                  className="rounded-full bg-[#F9F3EA] px-8 py-3 font-semibold text-[#FFA552] transition hover:opacity-90 w-full sm:w-auto"
+                  disabled={isLoading}
+                  className="rounded-full bg-[#F9F3EA] px-8 py-3 font-semibold text-[#FFA552] transition hover:opacity-90 w-full sm:w-auto disabled:opacity-70"
                 >
-                  SIMPAN PASSWORD
+                  {isLoading ? "MENYIMPAN..." : "SIMPAN PASSWORD"}
                 </button>
               </div>
             </form>
@@ -69,7 +150,7 @@ const ResetPassword = () => {
             </Link>
 
             <img
-              src="/assets/login-cat.jpg"
+              src="/assets/auth1.jpg"
               alt="Cats"
               className="h-full w-full object-cover"
             />

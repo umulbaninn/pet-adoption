@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         // Memanggil PetSeeder agar data hewan masuk ke database
         $this->call([
             PetSeeder::class,
+            AdminSeeder::class
         ]);
 
         // Opsional: Tetap biarkan test user bawaan Laravel jika mau

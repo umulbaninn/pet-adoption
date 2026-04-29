@@ -1,7 +1,52 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const ForgotPassword = ({ isOpen, onClose }) => {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+
   if (!isOpen) return null;
+
+  const handleSendOTP = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+    setMessage("");
+
+    try {
+      // Sesuaikan endpoint dengan API Laravel kamu
+      const response = await fetch("http://localhost:8000/api/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Gagal mengirim OTP.");
+      }
+
+      setMessage(data.message || "OTP berhasil dikirim ke email Anda.");
+      
+      // Tunggu sebentar lalu redirect ke halaman reset password sambil membawa email
+      setTimeout(() => {
+        navigate("/reset", { state: { email } });
+        onClose(); // Tutup modal
+      }, 2000);
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -23,27 +68,33 @@ const ForgotPassword = ({ isOpen, onClose }) => {
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-[#FFA552]">Lupa Password?</h2>
           <p className="text-[#c8ae90] text-sm mt-2">
-            Masukkan email kamu dan kami akan kirimkan instruksi reset password.
+            Masukkan email kamu dan kami akan kirimkan instruksi reset password beserta kode OTP.
           </p>
         </div>
 
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+        {error && <p className="mb-4 text-sm text-red-500 text-center">{error}</p>}
+        {message && <p className="mb-4 text-sm text-green-500 text-center">{message}</p>}
+
+        <form onSubmit={handleSendOTP} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
             <input 
               type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
               placeholder="nama@email.com"
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
             />
           </div>
 
-          <Link to="/reset">
-            <button 
-              className="w-full bg-[#FFA552] hover:bg-[#FFA552]/80 text-[#F9F3EA] font-semibold py-3 rounded-lg transition duration-200"
-            >
-              Kirim Link Reset
-            </button>
-          </Link>
+          <button 
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-[#FFA552] hover:bg-[#FFA552]/80 text-[#F9F3EA] font-semibold py-3 rounded-lg transition duration-200 disabled:opacity-70"
+          >
+            {isLoading ? "Mengirim..." : "Kirim Link Reset"}
+          </button>
         </form>
 
         <div className="mt-6 text-center">
@@ -59,4 +110,4 @@ const ForgotPassword = ({ isOpen, onClose }) => {
   );
 }
 
-export default ForgotPassword
+export default ForgotPassword;

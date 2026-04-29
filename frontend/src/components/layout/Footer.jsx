@@ -14,6 +14,7 @@ const Footer = () => {
             <li><a href="/#pets" className="transition hover:text-black/50">Pets</a></li>
             <li><a href="/#about" className="transition hover:text-black/50">About</a></li>
             <li><a href="/#contact" className="transition hover:text-black/50">Contact</a></li>
+            <li><Link to="/donate" className="transition hover:text-black/50">Donate</Link></li>
           </ul>
 
           <div className="flex gap-4 pt-4 text-3xl">

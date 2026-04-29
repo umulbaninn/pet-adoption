@@ -109,30 +109,32 @@ function Home() {
             // Map data dari state 'pets' yang sudah difetch
             pets.map((pet) => {
               return (
-                <article
-                  key={pet.id}
-                  className="group relative min-h-[360px] overflow-hidden rounded-2xl bg-white shadow-[0_18px_40px_rgba(18,18,23,0.12)]"
-                >
-                  <img
-                    // Sesuaikan 'pet.image' dengan nama kolom gambar di database Laravel kamu
-                    // Jika API mengembalikan path, kamu mungkin perlu menambahkan base URL, contoh: `http://localhost:8000/storage/${pet.image}`
-                    src={pet.image || "/assets/pets/cat1.jpg"} 
-                    alt={pet.name}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
+                <Link to={`/pets/${pet.id}`} key={pet.id}>
+                  <article
+                    key={pet.id}
+                    className="group relative min-h-[360px] overflow-hidden rounded-2xl bg-white shadow-[0_18px_40px_rgba(18,18,23,0.12)]"
+                  >
+                    <img
+                      // Sesuaikan 'pet.image' dengan nama kolom gambar di database Laravel kamu
+                      // Jika API mengembalikan path, kamu mungkin perlu menambahkan base URL, contoh: `http://localhost:8000/storage/${pet.image}`
+                      src={pet.image || "/assets/pets/cat1.jpg"} 
+                      alt={pet.name}
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
 
-                  <div className="absolute inset-x-0 bottom-0">
-                    <div className="mx-[-12%] h-10 rounded-t-[100%] bg-white"></div>
-                    <div className="bg-white px-6 pb-7 pt-2 text-center">
-                      <h3 className="text-2xl font-semibold flex flex-col text-[#ffa552]">
-                        {pet.name}
-                        <span className="text-sm font-normal text-[#70451b]">
-                          {pet.breed}
-                        </span>
-                      </h3>
+                    <div className="absolute inset-x-0 bottom-0">
+                      <div className="mx-[-12%] h-10 rounded-t-[100%] bg-white"></div>
+                      <div className="bg-white px-6 pb-7 pt-2 text-center">
+                        <h3 className="text-2xl font-semibold flex flex-col text-[#ffa552]">
+                          {pet.name}
+                          <span className="text-sm font-normal text-[#70451b]">
+                            {pet.breed}
+                          </span>
+                        </h3>
+                      </div>
                     </div>
-                  </div>
-                </article>
+                  </article>
+                </Link>
               );
             })
           )}
@@ -282,39 +284,6 @@ function Home() {
                 />
                 </div>
             </div>
-            </div>
-        </section>
-        
-        <section id="donate" className="mt-20 px-4 pb-16 sm:px-6">
-            <div className="mx-auto max-w-6xl overflow-hidden]"></div>
-            <div className="grid items-center gap-10 px-6 py-10 sm:px-10 lg:grid-cols-[0.92fr_1.08fr] lg:px-14 lg:py-14">
-                <div className="max-w-[420px]">
-                <h2 className="text-4xl font-bold tracking-tight text-[#ffa552] sm:text-5xl">
-                    Donate
-                </h2>
-
-                <p className="mt-4 text-lg leading-6 text-[#70451b]">
-                    We are a non-profit organization and rely on donations to
-                    support our mission to provide a safe and loving home for
-                    animals in need. Your generous contribution can make a significant difference in the lives of these animals, helping us provide food, shelter, medical care, and find them loving families. Every donation, big or small, goes a long way in making a positive impact on the lives of our furry friends. Thank you for your support!
-                </p>
-
-                <Link to="/donate">
-                    <button className="mt-8 rounded-full bg-[#Ffa522] px-6 py-3 text-sm font-medium text-[#f9f3ea] transition hover:bg-[#ff972f] sm:px-8 sm:text-base">
-                        Donate Now
-                    </button>
-                </Link>
-                </div>
-
-                <div className="relative flex min-h-[320px] items-end justify-center lg:min-h-[520px]">
-                <div className="absolute inset-x-[12%] bottom-6 h-10 rounded-full bg-[#d8c1ab]/35 blur-2xl"></div>
-                <div className="absolute top-12 right-[16%] h-36 w-36 rounded-full bg-[#ffe2c7] blur-3xl"></div>
-                <img
-                    src="/assets/donate-img.jpg"
-                    alt="Ilustrasi anjing dan kucing"
-                    className="relative z-10 w-full rounded-lg max-w-[520px] object-contain drop-shadow-[0_24px_32px_rgba(120,80,35,0.18)]"
-                />
-                </div>
             </div>
         </section>
     </>

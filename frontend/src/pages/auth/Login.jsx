@@ -37,16 +37,22 @@ const Login = () => {
         throw new Error(data.message || "Login gagal. Periksa email dan password Anda.");
       }
 
-      // Jika sukses, simpan token ke localStorage (sesuaikan nama 'token' dengan response API kamu)
+      // Jika sukses, simpan token ke localStorage
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
       
-      // Opsional: simpan data user
-      // localStorage.setItem("user", JSON.stringify(data.user));
+      // ===== BAGIAN INI YANG DITAMBAHKAN =====
+      // Menyimpan data email yang barusan diketik ke localStorage biar dibaca Navbar
+      const userData = { email: email };
+      localStorage.setItem("user", JSON.stringify(userData));
+      // ========================================
 
       // Redirect ke halaman utama/dashboard setelah berhasil login
       navigate("/");
+      
+      // Refresh halaman biar Navbar otomatis membaca token dan user baru dari localStorage
+      window.location.reload(); 
       
     } catch (err) {
       setError(err.message);

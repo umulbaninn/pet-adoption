@@ -1,6 +1,6 @@
 import Navbar from "../components/layout/Navbar";
 import { useState } from "react";
-import { Heart, WalletCards, Info, HeartHandshake } from "lucide-react";
+import { Heart, WalletCards, Info } from "lucide-react";
 
 const Donate = () => {
   const [amount, setAmount] = useState("");
@@ -19,7 +19,7 @@ const Donate = () => {
             <div className="mx-auto max-w-5xl">
             
             <div className="mb-12 text-center">
-            <HeartHandshake className="mx-auto mb-4 h-16 w-16 text-[#FFA552]" strokeWidth={1.5} />
+            <img src="/assets/logo2.png" alt="Hewan lucu menatap" className="mx-auto mb-4 h-16" />
             <h1 className="mb-4 text-4xl font-bold uppercase tracking-wide">
                 Beri Mereka Harapan
             </h1>
@@ -34,7 +34,7 @@ const Donate = () => {
             
             <div className="flex flex-col justify-center space-y-6 md:col-span-2">
                 <img 
-                src="/assets/donate-pets.jpg" 
+                src="/assets/donate-img2.jpg" 
                 alt="Hewan diselamatkan" 
                 className="h-64 w-full rounded-[30px] object-cover shadow-lg"
 

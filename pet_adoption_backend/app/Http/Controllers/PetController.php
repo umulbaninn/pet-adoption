@@ -12,7 +12,7 @@ class PetController extends Controller
     // GET /api/pets
     public function index()
     {
-        $pets = Pet::all()->map(function ($pet) {
+        $pets = Pet::orderBy('id', 'asc')->get()->map(function ($pet) {
             if ($pet->image) {
                 $pet->image = url('storage/' . $pet->image);
             }
