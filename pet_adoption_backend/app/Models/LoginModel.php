@@ -12,13 +12,15 @@ class LoginModel extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     // Nama tabel di pgAdmin kamu
-    protected $table = 'login';
+   protected $table = 'login'; // Pastikan mengarah ke tabel login
 
-    // Kolom yang boleh diisi secara otomatis
     protected $fillable = [
         'email',
         'password',
         'role',
+        'otp',               // WAJIB ADA
+        'otp_expires_at',    // WAJIB ADA
+        'email_verified_at'  // WAJIB ADA
     ];
 
     protected $hidden = [
