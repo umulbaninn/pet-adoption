@@ -3,4 +3,4 @@
 /pet_adoption_backend/vendor/
 .env
 /public/build
-/public/storage
+/public/storagew
